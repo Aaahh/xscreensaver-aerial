@@ -1,5 +1,6 @@
 # wallpaper-aerial
-An wallpaper that randomly selects one of the Apple TV4 HD aerial movies and plays it using mpv. 
+An wallpaper that randomly selects one of the Apple TV4 HD aerial movies and plays it using mplayer. 
+* Chnages unity theme color to average video color
 * The day movies will play between the hours of 7 AM and 7 PM while the night movies will play thereafter.
 * No movie should repeat until all of the respective movies have cycled through once. After that, the queue will reset and continue playing in a random fashion.
 

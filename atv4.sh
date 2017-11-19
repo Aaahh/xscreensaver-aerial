@@ -7,6 +7,8 @@ command -v mpv >/dev/null 2>&1 || {
 echo "I require mpv but it's not installed. Aborting." >&2
 exit 1; }
 
+/usr/lib/xscreensaver/lightsOn.sh
+
 # path of movies
 movies=/opt/ATV4
 

@@ -86,7 +86,8 @@ do
     rm -f $temp_dir/thumb.png
     nice xwinwrap -b -s -fs -st -sp -nf -ov -fdt -d "Desktop" -- mpv -wid WID --really-quiet --no-audio --panscan="1.0" $movies/$useit &
     ffmpeg -i $movies/$useit -vf  "thumbnail" -frames:v 1 $temp_dir/thumb.png
-    gsettings set org.compiz.unityshell:/org/compiz/profiles/unity/plugins/unityshell/ background-color $(convert $temp_dir/thumb.png -scale 1x1\! txt:-|egrep -o '#\w+')ff
+    # gsettings set org.compiz.unityshell:/org/compiz/profiles/unity/plugins/unityshell/ background-color $(convert $temp_dir/thumb.png -scale 1x1\! txt:-|egrep -o '#\w+')ff
+    gsettings set org.gnome.desktop.background picture-uri "file:///$temp_dir/thumb.png"
   fi
   pid=$!
   wait $pid

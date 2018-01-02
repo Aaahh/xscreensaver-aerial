@@ -73,21 +73,26 @@ runit() {
   fi
 }
 
-temp_dir=$(mktemp -d)
+UserBack=$(/usr/bin/gsettings get org.gnome.desktop.background picture-uri)
+mkdir -p ~/.config/atv4wall
+conifgdir=~/.config/atv4wall
 # this part taken from Kevin Cox
 # https://github.com/kevincox/xscreensaver-videos
 IFS=$'\n'
 trap : SIGTERM SIGINT SIGHUP
+trap '{ echo "Ending..." ; /usr/bin/gsettings set org.gnome.desktop.background picture-uri "$UserBack"; exit 1; }' INT
 while (true) #!(keystate lshift)
 do
   runit
   if [[ -f "$movies/$useit" ]]; then
     # file is on filesystem so just play it
-    rm -f $temp_dir/thumb.png
-    nice xwinwrap -b -s -fs -st -sp -nf -ov -fdt -d "Desktop" -- mpv -wid WID --really-quiet --no-audio --panscan="1.0" $movies/$useit &
-    ffmpeg -i $movies/$useit -vf  "thumbnail" -frames:v 1 $temp_dir/thumb.png
-    # gsettings set org.compiz.unityshell:/org/compiz/profiles/unity/plugins/unityshell/ background-color $(convert $temp_dir/thumb.png -scale 1x1\! txt:-|egrep -o '#\w+')ff
-    gsettings set org.gnome.desktop.background picture-uri "file:///$temp_dir/thumb.png"
+    rm -f $conifgdir/thumb.png
+    nice xwinwrap -ovr -- mpv -wid WID --really-quiet --no-audio --panscan="1.0" --vo=opengl --hwdec=auto $movies/$useit &
+    ffmpeg -y -i $movies/$useit -vframes 1 $conifgdir/thumb.png
+    /usr/bin/gsettings set org.gnome.desktop.background picture-uri "file:///$conifgdir/thumb.png"
+    ffmpeg -y -i $movies/$useit -vf select=\'eq\(n,$(expr "$(ffprobe -show_streams "$movies/$useit" 2> /dev/null | grep nb_frames | head -1 | cut -d \= -f 2) - 1")\) -vframes 1 $conifgdir/thumb.png
+    # /usr/bin/gsettings set org.compiz.unityshell:/org/compiz/profiles/unity/plugins/unityshell/ background-color $(convert $temp_dir/thumb.png -scale 1x1\! txt:-|egrep -o '#\w+')ff
+    /usr/bin/gsettings set org.gnome.desktop.background picture-uri "file:///$conifgdir/thumb.png"
   fi
   pid=$!
   wait $pid

@@ -88,13 +88,13 @@ do
     # file is on filesystem so just play it
     rm -f $conifgdir/thumb.png
     nice xwinwrap -ovr -- mpv -wid WID --really-quiet --no-audio --panscan="1.0" --vo=opengl --hwdec=auto $movies/$useit &
+    pid=$!
     ffmpeg -y -i $movies/$useit -vframes 1 $conifgdir/thumb.png
     /usr/bin/gsettings set org.gnome.desktop.background picture-uri "file:///$conifgdir/thumb.png"
     ffmpeg -y -i $movies/$useit -vf select=\'eq\(n,$(expr "$(ffprobe -show_streams "$movies/$useit" 2> /dev/null | grep nb_frames | head -1 | cut -d \= -f 2) - 1")\) -vframes 1 $conifgdir/thumb.png
     # /usr/bin/gsettings set org.compiz.unityshell:/org/compiz/profiles/unity/plugins/unityshell/ background-color $(convert $temp_dir/thumb.png -scale 1x1\! txt:-|egrep -o '#\w+')ff
     /usr/bin/gsettings set org.gnome.desktop.background picture-uri "file:///$conifgdir/thumb.png"
   fi
-  pid=$!
   wait $pid
   [ $? -gt 128 ] && { kill $pid ; exit 128; } ;
 done

@@ -12,6 +12,8 @@ if [ ! -d "$dir" ]; then
 	mkdir -p "$dir"
 fi
 
+cd "$dir"
+
 url="http://a1.phobos.apple.com/us/r1000/000/Features/atv/AutumnResources/videos"
 for i in b10-1.mov b10-2.mov b10-3.mov b10-4.mov b1-1.mov b1-2.mov b1-3.mov b1-4.mov \
 	b2-1.mov b2-2.mov b2-3.mov b2-4.mov b3-1.mov b3-2.mov b3-3.mov b4-1.mov b4-2.mov \

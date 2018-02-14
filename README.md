@@ -14,14 +14,7 @@ An wallpaper that randomly selects one of the Apple TV4 HD aerial movies and pla
 Download the expected video content manually to save the bandwidth of repeatedly streaming them.
 This screensaver expects them to be installed to `/opt/ATV4` which should be world-readable. You may use the following to little script to obtain the videos and save them to this location. Make sure that you have `wget` installed prior to running the script:
 ```
-./download.sh
-```
-```
-cd xwinwrap
-make
-sudo make install
-cd ..
-cp atv4wall /usr/bin/atv4wall && chmod a+x /usr/bin/atv4wall
+sudo ./install.sh
 ```
 
 Now you can run it with `atv4wall` in bash. Enjoy!

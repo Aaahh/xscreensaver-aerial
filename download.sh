@@ -30,7 +30,7 @@ for i in b10-1.mov b10-2.mov b10-3.mov b10-4.mov b1-1.mov b1-2.mov b1-3.mov b1-4
 	comp_DB_D002_C003_t9_6M_HB_tag0.mov comp_C007_C004_0824AJ_001_v01_6M_HB_tag0.mov \
 	comp_DB_D001_C005_t9_6M_HB_tag0.mov comp_HK_H004_C013_t9_6M_HB_tag0.mov \
 	comp_DB_D008_C010_v04_6Mbps.mov; do
-	wget "$url/$i"
+	wget -c "$url/$i"
 	chmod 644 $(pwd)/$i
 done
 
@@ -39,7 +39,7 @@ url="https://sylvan.apple.com/Aerials/2x/Videos"
 #	HK_B005_C011_2K_HDR_HEVC.mov LA_A009_C009_2K_HDR_HEVC.mov DB_D008_C010_2K_HDR_HEVC.mov \
 #	LW_L001_C006_2K_HDR_HEVC.mov LA_A006_C008_2K_HDR_HEVC.mov DB_D011_C009_2K_HDR_HEVC.mov; do
 for i in DB_D011_C009_2K_SDR_HEVC.mov LA_A011_C003_2K_SDR_HEVC.mov; do
-	wget "$url/$i"
+	wget -c "$url/$i"
 	chmod 644 $(pwd)/$i
 done
 

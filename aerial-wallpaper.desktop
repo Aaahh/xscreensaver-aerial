@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Exec=bash -c atv4wall & bash -c vid.py &
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=true
+Name=Aerial Wallpaper
+Comment=Aerial-Wall

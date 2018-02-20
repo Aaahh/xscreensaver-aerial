@@ -1,6 +1,6 @@
 [Desktop Entry]
 Type=Application
-Exec=bash -c atv4wall & bash -c vid.py &
+Exec=sleep 12 && bash -c "bash -c atv4wall & bash -c vid.py &"
 Hidden=false
 NoDisplay=false
 X-GNOME-Autostart-enabled=true

@@ -38,7 +38,7 @@ url="https://sylvan.apple.com/Aerials/2x/Videos"
 #for i in DB_D001_C005_2K_HDR_HEVC.mov LA_A005_C009_2K_HDR_HEVC.mov DB_D001_C001_2K_HDR_HEVC.mov\
 #	HK_B005_C011_2K_HDR_HEVC.mov LA_A009_C009_2K_HDR_HEVC.mov DB_D008_C010_2K_HDR_HEVC.mov \
 #	LW_L001_C006_2K_HDR_HEVC.mov LA_A006_C008_2K_HDR_HEVC.mov DB_D011_C009_2K_HDR_HEVC.mov; do
-for i in DB_D011_C009_2K_SDR_HEVC.mov; do
+for i in DB_D011_C009_2K_SDR_HEVC.mov LA_A011_C003_2K_SDR_HEVC.mov; do
 	wget "$url/$i"
 	chmod 644 $(pwd)/$i
 done

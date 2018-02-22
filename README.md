@@ -8,7 +8,6 @@ An wallpaper that randomly selects one of the Apple TV4 HD aerial movies and pla
 * coreutils
 * mpv
 * ffmpeg
-* ImageMagick
 
 # Installation
 Download the expected video content manually to save the bandwidth of repeatedly streaming them.

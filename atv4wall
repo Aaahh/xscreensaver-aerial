@@ -7,12 +7,21 @@ command -v mpv >/dev/null 2>&1 || {
 echo "I require mpv but it's not installed. Aborting." >&2
 exit 1; }
 
+FILE1=$1
+FILES=0
+
+if [ -n "$FILE1" ]; then
+  FILES=1
+fi
+
 # path of movies
 movies=/opt/ATV4
 
 # Intel driver fix, see https://bugs.launchpad.net/ubuntu/+source/libvdpau/+bug/1300215
 if [[ ! $(/usr/bin/prime-select query) == "nvidia" ]]; then
-	export VDPAU_DRIVER=va_gl
+  if [[ $(/usr/bin/prime-select query) == "intel" ]]; then
+    export VDPAU_DRIVER=va_gl
+  fi
 fi
 
 # day and night videos
@@ -89,15 +98,23 @@ do
   runit
   if [[ -f "$movies/$useit" ]]; then
     # file is on filesystem so just play it
-    nice xwinwrap -ovr -s -fdt -- mpv -wid WID --really-quiet --no-audio --panscan="1.0" --input-ipc-server=/tmp/mpvsocket $movies/$useit &
-    pid=$!
-    if [ ! -f "$conifgdir/$useit.png" ]; then
-      ffmpeg -y -i $movies/$useit -vframes 1 $conifgdir/$useit.png
-      /usr/bin/gsettings set org.gnome.desktop.background picture-uri "file:///$conifgdir/$useit.png"
-      ffmpeg -y -i $movies/$useit -vf select=\'eq\(n,$(expr "$(ffprobe -show_streams "$movies/$useit" 2> /dev/null | grep nb_frames | head -1 | cut -d \= -f 2) - 1")\) -vframes 1 $conifgdir/$useit.png
+    if [ $FILES > 0 ]; then
+      nice xwinwrap -ovr -s -fdt -- mpv -wid WID --really-quiet --panscan="1.0" --video-aspect=16:9 --autofit-larger=100%x100% --input-ipc-server=/tmp/mpvsocket $FILE1 &
+    else
+      nice xwinwrap -ovr -s -fdt -- mpv -wid WID --really-quiet --no-audio --panscan="1.0" --video-aspect=16:9 --autofit-larger=100%x100% --input-ipc-server=/tmp/mpvsocket $movies/$useit &
     fi
-    /usr/bin/gsettings set org.gnome.desktop.background picture-uri "file:///$conifgdir/$useit.png"    
-    # /usr/bin/gsettings set org.compiz.unityshell:/org/compiz/profiles/unity/plugins/unityshell/ background-color $(convert $temp_dir/thumb.png -scale 1x1\! txt:-|egrep -o '#\w+')ff
+    pid=$!
+    if [ ! $FILES > 0 ]; then
+      if [ ! -f "$conifgdir/$useit.png" ]; then
+        ffmpeg -y -i $movies/$useit -vframes 1 $conifgdir/$useit.png
+        /usr/bin/gsettings set org.gnome.desktop.background picture-uri "file:///$conifgdir/$useit.png"
+        ffmpeg -y -i $movies/$useit -vf select=\'eq\(n,$(expr "$(ffprobe -show_streams "$movies/$useit" 2> /dev/null | grep nb_frames | head -1 | cut -d \= -f 2) - 1")\) -vframes 1 $conifgdir/$useit.png
+      fi
+      /usr/bin/gsettings set org.gnome.desktop.background picture-uri x"file:///$conifgdir/$useit.png"    
+      # /usr/bin/gsettings set org.compiz.unityshell:/org/compiz/profiles/unity/plugins/unityshell/ background-color $(convert $temp_dir/thumb.png -scale 1x1\! txt:-|egrep -o '#\w+')ff
+    fi
+    FILES=$(expr $FILES - 1) # ...
+    echo "$FILES"
   fi
   wait $pid
   [ $? -gt 128 ] && { kill $pid ; exit 128; } ;

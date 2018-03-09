@@ -1,0 +1,7 @@
+{
+  "name": "fxvid",
+  "description": "Open video to background",
+  "path": "/usr/bin/vid2.py",
+  "type": "stdio",
+  "allowed_extensions": [ "woohoomoo2u@gmail.com" ]
+}

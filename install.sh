@@ -20,6 +20,7 @@ cd ..
 sudo cp atv4wall /usr/bin/atv4wall && chmod a+x /usr/bin/atv4wall
 sudo cp vid.py /usr/bin/vid.py && chmod a+x /usr/bin/vid.py
 sudo cp vid2.py /usr/bin/vid2.py && chmod a+x /usr/bin/vid2.py
+sudo cp fxvid.json $HOME/.mozilla/native-messaging-hosts/fxvid.json
 read -n1 -p "Autostart Aerial Wallpaper? (y/N)"
 echo $USER
 if [[ $REPLY == [yY] ]]; then

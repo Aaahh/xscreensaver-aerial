@@ -1,0 +1,59 @@
+#!/usr/bin/env python
+
+import sys
+import json
+import struct
+import os
+import commands
+import subprocess
+
+try:
+    # Python 3.x version
+    # Read a message from stdin and decode it.
+
+    def checkIntegrated():
+        stat, out = commands.getstatusoutput("ps aux | egrep '[/]usr/bin/atv4wall' |  awk '{print $2}'")
+        return any(char.isdigit() for char in out)
+
+    def getMessage():
+        rawLength = sys.stdin.buffer.read(4)
+        if len(rawLength) == 0:
+            sys.exit(0)
+        messageLength = struct.unpack('@I', rawLength)[0]
+        message = sys.stdin.buffer.read(messageLength).decode('utf-8')
+        return json.loads(message)
+
+    receivedMessage = getMessage()
+    if "watch?v" in receivedMessage:
+        isIntegrated = checkIntegrated()
+        if isIntegrated:
+            os.system("ps aux | egrep '[/]usr/bin/atv4wall'| awk '{print $2}' | xargs kill")
+            p = subprocess.Popen(['setsid', 'atv4wall', (receivedMessage)], stdout=subprocess.PIPE, stderr=subprocess.STDOUT); print(p.communicate())
+        else:
+            p = subprocess.Popen(['setsid', 'atv4wall', (receivedMessage)], stdout=subprocess.PIPE, stderr=subprocess.STDOUT); print(p.communicate())
+
+except AttributeError:
+    # Python 2.x version (if sys.stdin.buffer is not defined)
+    # Read a message from stdin and decode it.
+
+
+    def checkIntegrated():
+        stat, out = commands.getstatusoutput("ps aux | egrep '[/]usr/bin/atv4wall' |  awk '{print $2}'")
+        return any(char.isdigit() for char in out)
+
+    def getMessage():
+        rawLength = sys.stdin.read(4)
+        if len(rawLength) == 0:
+            sys.exit(0)
+        messageLength = struct.unpack('@I', rawLength)[0]
+        message = sys.stdin.read(messageLength)
+        return json.loads(message)
+
+    receivedMessage = getMessage()
+    if "watch?v" in receivedMessage:
+        isIntegrated = checkIntegrated()
+        if isIntegrated:
+            os.system("ps aux | egrep '[/]usr/bin/atv4wall'| awk '{print $2}' | xargs kill")
+            p = subprocess.Popen(['setsid', 'atv4wall', (receivedMessage)], stdout=subprocess.PIPE, stderr=subprocess.STDOUT); print(p.communicate())
+        else:
+            p = subprocess.Popen(['setsid', 'atv4wall', (receivedMessage)], stdout=subprocess.PIPE, stderr=subprocess.STDOUT); print(p.communicate())

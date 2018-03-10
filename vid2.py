@@ -23,14 +23,15 @@ try:
         message = sys.stdin.buffer.read(messageLength).decode('utf-8')
         return json.loads(message)
 
-    receivedMessage = getMessage()
-    if "watch?v" in receivedMessage:
-        isIntegrated = checkIntegrated()
-        if isIntegrated:
-            os.system("ps aux | egrep '[/]usr/bin/atv4wall'| awk '{print $2}' | xargs kill")
-            p = subprocess.Popen(['setsid', 'atv4wall', (receivedMessage)], stdout=subprocess.PIPE, stderr=subprocess.STDOUT); print(p.communicate())
-        else:
-            p = subprocess.Popen(['setsid', 'atv4wall', (receivedMessage)], stdout=subprocess.PIPE, stderr=subprocess.STDOUT); print(p.communicate())
+    while True:
+        receivedMessage = getMessage()
+        if "watch?v" in receivedMessage:
+            isIntegrated = checkIntegrated()
+            if isIntegrated:
+                os.system("ps aux | egrep '[/]usr/bin/atv4wall'| awk '{print $2}' | xargs kill")
+                p = subprocess.Popen(['setsid', 'atv4wall', 'true', (receivedMessage)], stdout=subprocess.PIPE, stderr=subprocess.STDOUT); print(p.communicate())
+            else:
+                p = subprocess.Popen(['setsid', 'atv4wall', (receivedMessage)], stdout=subprocess.PIPE, stderr=subprocess.STDOUT); print(p.communicate())
 
 except AttributeError:
     # Python 2.x version (if sys.stdin.buffer is not defined)
@@ -49,11 +50,12 @@ except AttributeError:
         message = sys.stdin.read(messageLength)
         return json.loads(message)
 
-    receivedMessage = getMessage()
-    if "watch?v" in receivedMessage:
-        isIntegrated = checkIntegrated()
-        if isIntegrated:
-            os.system("ps aux | egrep '[/]usr/bin/atv4wall'| awk '{print $2}' | xargs kill")
-            p = subprocess.Popen(['setsid', 'atv4wall', (receivedMessage)], stdout=subprocess.PIPE, stderr=subprocess.STDOUT); print(p.communicate())
-        else:
-            p = subprocess.Popen(['setsid', 'atv4wall', (receivedMessage)], stdout=subprocess.PIPE, stderr=subprocess.STDOUT); print(p.communicate())
+    while True:
+        receivedMessage = getMessage()
+        if "watch?v" in receivedMessage:
+            isIntegrated = checkIntegrated()
+            if isIntegrated:
+                os.system("ps aux | egrep '[/]usr/bin/atv4wall'| awk '{print $2}' | xargs kill")
+                p = subprocess.Popen(['setsid', 'atv4wall', 'true', (receivedMessage)], stdout=subprocess.PIPE, stderr=subprocess.STDOUT); print(p.communicate())
+            else:
+                p = subprocess.Popen(['setsid', 'atv4wall', 'false',(receivedMessage)], stdout=subprocess.PIPE, stderr=subprocess.STDOUT); print(p.communicate())

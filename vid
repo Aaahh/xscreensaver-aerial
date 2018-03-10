@@ -31,9 +31,9 @@ class VidWall:
                                            appindicator.CATEGORY_APPLICATION_STATUS)
 	self.ind.set_status(appindicator.STATUS_ACTIVE)
 	self.ind.set_attention_icon("indicator-messages-new")
-	self.ind.set_icon_theme_path("/usr/lib/vidwall/")
+	self.ind.set_icon_theme_path("/usr/lib/atvvid/")
 	self.isIntegrated = self.checkIntegrated()
-	self.ind.set_icon('intel')
+	self.ind.set_icon('wallvid')
 	self.menu_setup()
         self.ind.set_menu(self.menu)
 
@@ -75,13 +75,14 @@ class VidWall:
 
     def checkIntegrated(self):
 	stat, out = commands.getstatusoutput("ps aux | egrep '[/]usr/bin/atv4wall' |  awk '{print $2}'")
+
 	return any(char.isdigit() for char in out)
 
     def ignore(*args):
 	return gtk.TRUE
 
     def rendererString(self):
-	stat, out = commands.getstatusoutput("ps aux | grep [/]opt/ATV4/ | awk '{print $23}'")
+	stat, out = commands.getstatusoutput("ps aux | grep [s]erver=/tmp/mpvsocket |  awk '{ print $NF }'")
 	out = out.replace("/opt/ATV4/", "Video: ")
 	return out
 

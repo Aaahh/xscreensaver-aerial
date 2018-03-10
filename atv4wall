@@ -13,10 +13,13 @@ FILE1=$2
 if [ -n "$FILE1" ]; then
   FILES=1
   value=${FILE1#*=}
-elif [ $LOOP != "false" ] && [ $LOOP != "true" ]; then
-  FILES=1
-  FILE1=$LOOP
-  value=${FILE1#*=}
+elif [ -n "$LOOP" ]; then
+  if [ "$LOOP" != "false" ] && [ "$LOOP" != "true" ]; then
+    FILES=1
+    FILE1=$LOOP
+    LOOP="false"
+    value=${FILE1#*=}
+  fi
 fi
 
 # path of movies

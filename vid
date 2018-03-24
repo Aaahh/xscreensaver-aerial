@@ -77,6 +77,8 @@ class VidWall:
                                  stdout=subprocess.PIPE,
                                  stderr=subprocess.STDOUT)
             print 'finished'
+        sleep(3)
+        self.info_item.get_child().set_text(self.rendererString())
 
     def opensettings2(self, dude):
         os.system("echo 'cycle pause'   | socat - /tmp/mpvsocket")

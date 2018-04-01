@@ -102,7 +102,7 @@ IFS=$'\n'
 trap : SIGTERM SIGINT SIGHUP
 trap '{ echo "Ending..." ; /usr/bin/gsettings set org.gnome.desktop.background picture-uri "$UserBack"; exit 1; }' INT
 if [ $FILES > 0 ]; then
-  nice xwinwrap -ovr -s -fdt -- mpv -wid WID --really-quiet --panscan="1.0" --video-aspect=16:9 --autofit-larger=100%x100% --input-ipc-server=/tmp/mpvsocket $FILE1 &
+  nice xwinwrap -ovr -s -fdt -- mpv -ni -nf -wid WID --really-quiet --panscan="1.0" --video-aspect=16:9 --autofit-larger=100%x100% --input-ipc-server=/tmp/mpvsocket $FILE1 &
   if [ ! -f "$conifgdir/$value.jpg" ]; then
     echo BABABA
     wget "https://img.youtube.com/vi/$value/maxresdefault.jpg" -O $conifgdir/$value.jpg

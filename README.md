@@ -1,5 +1,5 @@
 # Wallpaper-Aerial
-[![forthebadge](http://forthebadge.com/badges/made-with-crayons.svg)](http://forthebadge.com)
+[![forthebadge made-with-crayons](http://ForTheBadge.com/images/badges/made-with-crayons.svg)](https://www.forthebadge.org/)
 
 An wallpaper that randomly selects from a list of videos including the Apple TV4 HD aerial vidoes and plays it using mpv. 
 * Changes background to last frame of video while process is running

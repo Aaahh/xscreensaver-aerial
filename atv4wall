@@ -104,8 +104,8 @@ trap '{ echo "Ending..." ; /usr/bin/gsettings set org.gnome.desktop.background p
 
 if [ $FILES > 0 ]; then
   if [[ $LOOP == "loop" ]]; then
-    nice xwinwrap -ovr -s -fdt -ni -nf -- mpv -wid WID --really-quiet --panscan="1.0" --video-aspect=16:9 --autofit-larger=100%x100% --hwdec=auto --input-ipc-server=/tmp/mpvsocket --loop-file $FILE1 &
-    FILE1short=$(echo "$FILE_PATH" | sed "s/.*\///")
+    nice xwinwrap -ovr -s -fdt -ni -nf -- mpv -wid WID --really-quiet --panscan="1.0" --autofit-larger=100%x100% --hwdec=auto --input-ipc-server=/tmp/mpvsocket --loop-file $FILE1 &
+    FILE1short=$(basename "${FILE1}")
     echo $FILE1short
     if [ ! -f "$conifgdir/$FILE1short.png" ]; then
       ffmpeg -y -i $FILE1 -vframes 1 $conifgdir/$FILE1short.png
@@ -114,7 +114,7 @@ if [ $FILES > 0 ]; then
     fi
     /usr/bin/gsettings set org.gnome.desktop.background picture-uri "file:///$conifgdir/$FILE1short.png"
   else
-    nice xwinwrap -ovr -s -fdt -ni -nf -- mpv -wid WID --really-quiet --panscan="1.0" --video-aspect=16:9 --autofit-larger=100%x100% --hwdec=auto --input-ipc-server=/tmp/mpvsocket $FILE1 &
+    nice xwinwrap -ovr -s -fdt -ni -nf -- mpv -wid WID --really-quiet --panscan="1.0" --autofit-larger=100%x100% --hwdec=auto --input-ipc-server=/tmp/mpvsocket $FILE1 &
     if [ ! -f "$conifgdir/$value.jpg" ]; then
      echo BABABA
      wget "https://img.youtube.com/vi/$value/maxresdefault.jpg" -O $conifgdir/$value.jpg
@@ -135,7 +135,7 @@ _screen() {
       if [[ -f "$movies/$useit" ]]; then
         # file is on filesystem so just play it
         # nice xwinwrap -ovr -s -fdt -ni -nf -g $1 -- mpv -wid WID --really-quiet --no-audio --panscan="1.0" --video-aspect=16:9 --autofit-larger=100%x100% --input-ipc-server=/tmp/mpvsocket --background="$3" --video-zoom="$4" $movies/$useit &
-        nice xwinwrap -ov -s -ni -nf -g $1 -- mpv --fullscreen --no-stop-screensaver --no-audio --panscan="1.0" --input-ipc-server=/tmp/mpvsocket --no-osc --no-osd-bar -wid WID --quiet "$movies/$useit" --background="#000000" &
+        nice xwinwrap -ovr -s -b -sp -st -ni -nf -g $1 -- mpv --fullscreen --no-stop-screensaver --no-audio --panscan="1.0" --input-ipc-server=/tmp/mpvsocket --no-osc --no-osd-bar -wid WID --quiet "$movies/$useit" --background="#000000" &
         pid=$!
         if [ ! -f "$conifgdir/$useit.png" ]; then
           ffmpeg -y -i $movies/$useit -vframes 1 $conifgdir/$useit.png
@@ -157,5 +157,3 @@ for i in $( xrandr -q | grep ' connected' | grep -oP '\d+x\d+\+\d+\+\d+')
 do
     _screen $i &
 done
-
-# vim:set ts=2 sw=2 et:

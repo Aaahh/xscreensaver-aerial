@@ -21,7 +21,7 @@ mkdir -p /usr/lib/atvvid
 mkdir -p $HOME/.config/atv4wall/vid2
 mkdir -p $HOME/.mozilla/native-messaging-hosts
 sudo cp atv4wall /usr/bin/atv4wall && chmod a+x /usr/bin/atv4wall
-sudo cp vid /usr/bin/atvvid && chmod a+x /usr/bin/atvvid && chmod a+x /usr/bin/atvvid/vid
+sudo cp vid /usr/bin/atvvid && chmod a+x /usr/bin/atvvid
 sudo cp vid2 $HOME/.config/atv4wall/vid2 && chmod a+x $HOME/.config/atv4wall/vid2
 sudo cp fxvid.json $HOME/.mozilla/native-messaging-hosts/fxvid.json
 cp wallvid.png /usr/lib/atvvid/

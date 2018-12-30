@@ -99,8 +99,8 @@ class VidWall:
         (stat, out) = \
             commands.getstatusoutput("ps aux | grep '[x]winwrap ' |  awk '{ print $NF }'"
                 )
-        out = out.replace('/opt/ATV4/', 'Video: ')
-        return out
+        out = out.replace('/opt/ATV4/', '')
+        return "Video: "+out
 
     def switchVideo(self, dude):
         os.system('/usr/bin/killall mpv')

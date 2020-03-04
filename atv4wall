@@ -9,9 +9,10 @@ exit 1; }
 
 LOOP=$1
 FILE1=$2
-
+echo "Playlist mode."
 if [ -n "$FILE1" ]; then
   FILES=1
+  echo "Playlist mode.2"
   value=${FILE1#*=}
 elif [ -n "$LOOP" ]; then
   if [ "$LOOP" != "false" ] && [ "$LOOP" != "true" ]; then
@@ -19,6 +20,17 @@ elif [ -n "$LOOP" ]; then
     FILE1=$LOOP
     LOOP="false"
     value=${FILE1#*=}
+    SUB='list'
+    SUB2='index'
+    index=0
+    currentIndex=0
+    if [[ "$FILE1" == *"$SUB"* ]]; then
+        echo "Playlist mode."
+        LIST=$(youtube-dl -j --flat-playlist "$FILE1" | jq -r '.id' | sed 's_^_https://youtu.be/_')
+        if [[ "$FILE1" == *"$SUB2"* ]]; then
+          index=$(echo "${FILE1##*"index="}")
+        fi
+    fi
   fi
 fi
 
@@ -144,6 +156,17 @@ IFS=$'\n'
 trap : SIGTERM SIGINT SIGHUP
 trap '{ echo "Ending..." ; /usr/bin/gsettings set org.gnome.desktop.background picture-uri "$UserBack"; exit 1; }' INT
 
+
+youtubea() {
+    nice xwinwrap -ovr -s -fdt -ni -nf -- mpv -wid WID --really-quiet --panscan="1.0" --autofit-larger=100%x100% --hwdec=auto --input-ipc-server=/tmp/mpvsocket $1
+    # if [ ! -f "$conifgdir/$value.jpg" ]; then
+    #     echo BABABA
+    #     wget "https://img.youtube.com/vi/$value/maxresdefault.jpg" -O $conifgdir/$value.jpg
+    #     /usr/bin/gsettings set org.gnome.desktop.background picture-uri "file:///$conifgdir/$value.jpg"
+    #     /usr/bin/feh --bg-scale "file:///$conifgdir/$value.jpg"
+    # fi
+}
+
 if [ $FILES > 0 ]; then
   if [[ $LOOP == "loop" ]]; then
     nice xwinwrap -ovr -s -fdt -ni -nf -- mpv -wid WID --really-quiet --panscan="1.0" --autofit-larger=100%x100% --hwdec=auto --input-ipc-server=/tmp/mpvsocket --loop-file $FILE1 &
@@ -158,13 +181,19 @@ if [ $FILES > 0 ]; then
     /usr/bin/gsettings set org.gnome.desktop.background picture-uri "file:///$conifgdir/$FILE1short.png"
     /usr/bin/feh --bg-scale "file:///$conifgdir/$FILE1short.png"
   else
-    nice xwinwrap -ovr -s -fdt -ni -nf -- mpv -wid WID --really-quiet --panscan="1.0" --autofit-larger=100%x100% --hwdec=auto --input-ipc-server=/tmp/mpvsocket $FILE1 &
-    if [ ! -f "$conifgdir/$value.jpg" ]; then
-     echo BABABA
-     wget "https://img.youtube.com/vi/$value/maxresdefault.jpg" -O $conifgdir/$value.jpg
-     /usr/bin/gsettings set org.gnome.desktop.background picture-uri "file:///$conifgdir/$value.jpg"
-     /usr/bin/feh --bg-scale "file:///$conifgdir/$value.jpg"
-   fi
+    Yeetrun=false
+    for j in $LIST
+    do
+        if [[ "$currentIndex" -gt $index ]]; then
+          Yeetrun=true
+        fi
+        if [[ "$Yeetrun" = true ]]; then
+          echo "index: "$currentIndex
+          echo $j
+          youtubea $j
+        fi
+        currentIndex=$((currentIndex+1))
+    done
   fi
   pid=$!
   wait $pid
@@ -182,14 +211,18 @@ _screen() {
         # nice xwinwrap -ovr -s -fdt -ni -nf -g $1 -- mpv -wid WID --really-quiet --no-audio --panscan="1.0" --video-aspect=16:9 --autofit-larger=100%x100% --input-ipc-server=/tmp/mpvsocket --background="$3" --video-zoom="$4" $movies/$useit &
         nice xwinwrap -ovr -s -b -sp -st -ni -nf -g $1 -- mpv --fullscreen --no-stop-screensaver --no-audio --hwdec=auto --input-ipc-server=/tmp/mpvsocket --no-osc --no-osd-bar -wid WID --quiet --background="#000000" "$movies/$useit" &
         pid=$!
-        if [ ! -f "$conifgdir/$useit.png" ]; then
-          ffmpeg -y -i $movies/$useit -vframes 1 $conifgdir/$useit.png
-          /usr/bin/gsettings set org.gnome.desktop.background picture-uri "file:///$conifgdir/$useit.png"
-          /usr/bin/feh --bg-scale "file:///$conifgdir/$useit.png"
-          ffmpeg -y -i $movies/$useit -vf select=\'eq\(n,$(expr "$(ffprobe -show_streams "$movies/$useit" 2> /dev/null | grep nb_frames | head -1 | cut -d \= -f 2) - 1")\) -vframes 1 $conifgdir/$useit.png
-        fi
-        /usr/bin/gsettings set org.gnome.desktop.background picture-uri "file:///$conifgdir/$useit.png"
-        /usr/bin/feh --bg-scale "file:///$conifgdir/$useit.png"
+        # echo AAAAAAAAAAAAA
+        # echo "$conifgdir/$useit.png"
+        # echo aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+        # if [[ ! -f "$movies/$useit"+".png" ]]; then
+        #   echo hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh
+        #   ffmpeg -y -i $movies/$useit -vframes 1 $conifgdir/$useit.png
+        #   /usr/bin/gsettings set org.gnome.desktop.background picture-uri "file:///$conifgdir/$useit.png"
+        #   /usr/bin/feh --bg-scale "file:///$conifgdir/$useit.png"
+        #   ffmpeg -y -i $movies/$useit -vf select=\'eq\(n,$(expr "$(ffprobe -show_streams "$movies/$useit" 2> /dev/null | grep nb_frames | head -1 | cut -d \= -f 2) - 1")\) -vframes 1 $conifgdir/$useit.png
+        # fi
+        # /usr/bin/gsettings set org.gnome.desktop.background picture-uri "file:///$conifgdir/$useit.png"
+        # /usr/bin/feh --bg-scale "file:///$conifgdir/$useit.png"
           # /usr/bin/gsettings set org.compiz.unityshell:/org/compiz/profiles/unity/plugins/unityshell/ background-color $(convert $temp_dir/thumb.png -scale 1x1\! txt:-|egrep -o '#\w+')ff
         # FILES=$(expr $FILES - 1) # ...
         # echo "$FILES"
@@ -200,6 +233,7 @@ _screen() {
   fi
 }
 
+echo "yeet"
 for i in $( xrandr -q | grep ' connected' | grep -oP '\d+x\d+\+\d+\+\d+')
 do
     _screen $i &

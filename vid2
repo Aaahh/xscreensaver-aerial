@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python2
 
 import sys
 import json
@@ -31,7 +31,7 @@ try:
                 os.system("ps aux | egrep '[/]usr/bin/atv4wall'| awk '{print $2}' | xargs kill")
                 p = subprocess.Popen(['setsid', 'atv4wall', 'true', (receivedMessage)], stdout=subprocess.PIPE, stderr=subprocess.STDOUT); print(p.communicate())
             else:
-                p = subprocess.Popen(['setsid', 'atv4wall', (receivedMessage)], stdout=subprocess.PIPE, stderr=subprocess.STDOUT); print(p.communicate())
+                p = subprocess.Popen(['setsid', 'atv4wall', 'false', (receivedMessage)], stdout=subprocess.PIPE, stderr=subprocess.STDOUT); print(p.communicate())
 
 except AttributeError:
     # Python 2.x version (if sys.stdin.buffer is not defined)
@@ -53,6 +53,7 @@ except AttributeError:
     while True:
         receivedMessage = getMessage()
         if "watch?v" in receivedMessage:
+            # receivedMessage=receivedMessage
             isIntegrated = checkIntegrated()
             if isIntegrated:
                 os.system("ps aux | egrep '[/]usr/bin/atv4wall'| awk '{print $2}' | xargs kill")

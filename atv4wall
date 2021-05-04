@@ -129,7 +129,7 @@ IFS=$'\n'
 trap : SIGTERM SIGINT SIGHUP
 trap '{ echo "Ending..." ; /usr/bin/gsettings set org.gnome.desktop.background picture-uri "$UserBack"; exit 1; }' INT
 
-if [ $FILES > 0 ]; then
+if [ $FILES == 1 ]; then
   if [[ $LOOP == "loop" ]]; then
     nice xwinwrap -ovr -s -fdt -ni -nf -- mpv -wid WID --really-quiet --panscan="1.0" --autofit-larger=100%x100% --hwdec=auto --input-ipc-server=/tmp/mpvsocket --loop-file $FILE1 &
     FILE1short=$(basename "${FILE1}")

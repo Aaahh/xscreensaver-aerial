@@ -1,7 +1,7 @@
 {
   "name": "fxvid",
   "description": "Open video to background",
-  "path": "~/.config/atv4wall/vid2/vid2",
+  "path": "/usr/lib/atvvid/vid2",
   "type": "stdio",
   "allowed_extensions": [ "woohoomoo2u@gmail.com" ]
 }

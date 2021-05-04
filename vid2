@@ -6,6 +6,7 @@ import struct
 import os
 import commands
 import subprocess
+from time import sleep
 
 try:
     # Python 3.x version
@@ -32,6 +33,7 @@ try:
                 p = subprocess.Popen(['setsid', 'atv4wall', 'true', (receivedMessage)], stdout=subprocess.PIPE, stderr=subprocess.STDOUT); print(p.communicate())
             else:
                 p = subprocess.Popen(['setsid', 'atv4wall', 'false', (receivedMessage)], stdout=subprocess.PIPE, stderr=subprocess.STDOUT); print(p.communicate())
+        sleep(1)
 
 except AttributeError:
     # Python 2.x version (if sys.stdin.buffer is not defined)
@@ -60,3 +62,4 @@ except AttributeError:
                 p = subprocess.Popen(['setsid', 'atv4wall', 'true', (receivedMessage)], stdout=subprocess.PIPE, stderr=subprocess.STDOUT); print(p.communicate())
             else:
                 p = subprocess.Popen(['setsid', 'atv4wall', 'false',(receivedMessage)], stdout=subprocess.PIPE, stderr=subprocess.STDOUT); print(p.communicate())
+        sleep(1)

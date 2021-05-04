@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python2
 # -*- coding: utf-8 -*-
 
 # PRIME Indicator - indicator applet for NVIDIA Optimus laptops
@@ -18,23 +18,32 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-import gtk
-import appindicator
-import os
-import commands
-import gtk
-import sys
-import subprocess
 from time import sleep
+import subprocess
+import sys
+import commands
+import os
+import gi
+gi.require_version("Gtk", "3.0")
+from gi.repository import Gtk, GLib
+# try which gir is available prioritising Gtk3
+gi.require_version('AyatanaAppIndicator3', '0.1')
+try:
+    from gi.repository import AyatanaAppIndicator3 as appindicator
+except ImportError:
+    try:
+        from gi.repository import AppIndicator3 as appindicator
+    except ImportError:
+        from gi.repository import appindicator
 
 
 class VidWall:
 
     def __init__(self):
-        self.ind = appindicator.Indicator('Video Wallpaper',
-                'indicator-messages',
-                appindicator.CATEGORY_APPLICATION_STATUS)
-        self.ind.set_status(appindicator.STATUS_ACTIVE)
+        self.ind = appindicator.Indicator.new('Video Wallpaper',
+                                              'indicator-messages',
+                                              appindicator.IndicatorCategory.OTHER)
+        self.ind.set_status(appindicator.IndicatorStatus.ACTIVE)
         self.ind.set_attention_icon('indicator-messages-new')
         self.ind.set_icon_theme_path('/usr/lib/atvvid/')
         self.isIntegrated = self.checkIntegrated()
@@ -43,21 +52,21 @@ class VidWall:
         self.ind.set_menu(self.menu)
 
     def menu_setup(self):
-        self.menu = gtk.Menu()
-        self.info_item = gtk.MenuItem(self.rendererString())
+        self.menu = Gtk.Menu()
+        self.info_item = Gtk.MenuItem(self.rendererString())
         self.info_item.set_sensitive(False)
         self.info_item.show()
-        self.seperator_item = gtk.SeparatorMenuItem()
+        self.seperator_item = Gtk.SeparatorMenuItem()
         self.seperator_item.show()
-        self.switch_item = gtk.MenuItem('Next Video')
+        self.switch_item = Gtk.MenuItem('Next Video')
         self.switch_item.connect('activate', self.switchVideo)
         self.switch_item.show()
-        self.seperator2_item = gtk.SeparatorMenuItem()
+        self.seperator2_item = Gtk.SeparatorMenuItem()
         self.seperator2_item.show()
-        self.settings_item = gtk.MenuItem('Start/Stop Wallpaper')
+        self.settings_item = Gtk.MenuItem('Start/Stop Wallpaper')
         self.settings_item.connect('activate', self.opensettings)
         self.settings_item.show()
-        self.settings_item2 = gtk.MenuItem('Play/Pause Wallpaper')
+        self.settings_item2 = Gtk.MenuItem('Play/Pause Wallpaper')
         self.settings_item2.connect('activate', self.opensettings2)
         self.settings_item2.show()
         self.menu.append(self.info_item)
@@ -77,40 +86,38 @@ class VidWall:
                                  stdout=subprocess.PIPE,
                                  stderr=subprocess.STDOUT)
             print 'finished'
-        sleep(3)
+        sleep(1)
         self.info_item.get_child().set_text(self.rendererString())
 
     def opensettings2(self, dude):
         os.system("echo 'cycle pause'   | socat - /tmp/mpvsocket")
-        sleep(3)
+        sleep(1)
         self.info_item.get_child().set_text(self.rendererString())
 
     def checkIntegrated(self):
         (stat, out) = \
             commands.getstatusoutput("ps aux | egrep '[/]usr/bin/atv4wall' |  awk '{print $2}'"
-                )
+                                     )
 
         return any(char.isdigit() for char in out)
 
     def ignore(*args):
-        return gtk.TRUE
+        return Gtk.TRUE
 
     def rendererString(self):
         (stat, out) = \
             commands.getstatusoutput("ps aux | grep '[x]winwrap ' |  awk '{ print $NF }'"
-                )
+                                     )
         out = out.replace('/opt/ATV4/', '')
         return "Video: "+out
 
     def switchVideo(self, dude):
         os.system('/usr/bin/killall mpv')
-        sleep(3)
+        sleep(1)
         self.info_item.get_child().set_text(self.rendererString())
 
-
     def main(self):
-        gtk.main()
-
+        Gtk.main()
 
 if __name__ == '__main__':
     indicator = VidWall()
